@@ -14,13 +14,19 @@ public class Config {
             .comment("同步服务器url")
             .define("server_address", "http://exp.example.com:80/");
 
+    private static final ForgeConfigSpec.ConfigValue<String> LAST_UPDATE_TIME = BUILDER
+            .comment("最后更新时间(请勿更改)")
+            .define("last_update_time", "0");
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static String serverAddress;
+    public static String last_update_time;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         serverAddress = SERVER_ADD.get();
+        last_update_time = LAST_UPDATE_TIME.get();
     }
 
 }
