@@ -52,7 +52,6 @@ public class ClientUpdater {
     @SubscribeEvent
     public void showUpdateMassage(ScreenEvent.Opening event) {
         Update update = Update.loadJsonFromURL(Config.serverAddress + "api/getupdate");
-
         if (needshow) {
             if (update == null) {
                 update = new Update();
@@ -61,35 +60,44 @@ public class ClientUpdater {
                 update.mods_list = null;
                 event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, false));
                 LOGGER.warn("Connect Error");
-                needshow = false;
             } else {
-                Map<String, String> mods_list = new HashMap<String, String>();
-                File mods_dir = new File("./mods");
-                File mods[] = mods_dir.listFiles();
-                if (mods != null) {
-                    for (File file : mods) {
-                        if (file.isFile()) {
-                            mods_list.put(Tools.getMD5(file.getPath()), file.getName());
+                if (!update.update_time.equals(Config.last_update_time)) {
+                    event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, true));
+                    Config.setLastUpdateTime(update.update_time);
+                    LOGGER.info("need update");
+                } else {
+                    // 获取更新列表
+                    Map<String, String> mods_list = new HashMap<String, String>();
+                    File mods_dir = new File("./mods");
+                    File mods[] = mods_dir.listFiles();
+                    if (mods != null) {
+                        for (File file : mods) {
+                            if (file.isFile()) {
+                                mods_list.put(Tools.getMD5(file.getPath()), file.getName());
+                            }
                         }
                     }
-                }
-                boolean needupdate = false;
-                for (String key : update.mods_list) {
-                    if (mods_list.get(key) == null) {
-                        needupdate = true;
+                    // 判断完整性
+                    boolean needupdate = false;
+                    for (String key : update.mods_list) {
+                        if (mods_list.get(key) == null) {
+                            needupdate = true;
+                        }
+                    }
+                    for (String key : mods_list.keySet()) {
+                        if (update.mods_list.indexOf(key) == -1) {
+                            needupdate = true;
+                        }
+                    }
+                    if (needupdate) {
+                        event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, true));
+                        LOGGER.info("check");
+                    } else {
+                        LOGGER.info("Don't need update");
                     }
                 }
-                for (String key : mods_list.keySet()) {
-                    if (update.mods_list.indexOf(key) == -1) {
-                        needupdate = true;
-                    }
-                }
-                if (needupdate) {
-                    event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, true));
-                    LOGGER.info("ok");
-                }
-                needshow = false;
             }
+            needshow = false;
         }
     }
     // Add the example block item to the building blocks tab

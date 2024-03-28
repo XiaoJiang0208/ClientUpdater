@@ -29,4 +29,8 @@ public class Config {
         last_update_time = LAST_UPDATE_TIME.get();
     }
 
+    static void setLastUpdateTime(String time) {
+        LAST_UPDATE_TIME.set(time);
+    }
+
 }

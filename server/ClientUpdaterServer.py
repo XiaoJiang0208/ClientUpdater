@@ -1,8 +1,11 @@
+import signal
+import sys
 from flask import *
 import time
 import os
 import toml
 import hashlib
+import threading
 
 
 SERVER = Flask(__name__)
@@ -23,7 +26,6 @@ class Update():
         self.mod_list=dict()
 
     def makeModList(self):
-        print(self.dir)
         for f in os.listdir(self.dir+"/mods"):
             self.mod_list[getFileMD5(self.dir+"/mods/"+f)]=f;
             print(self.mod_list)
@@ -34,11 +36,47 @@ class Update():
                         "mods_list":list(self.mod_list.keys())})
 
     def getModPath(self,md5) -> str:
-        return self.dir+"/mods/"+self.mod_list[md5]
+        if os.path.exists(self.dir+"/mods/"+self.mod_list[md5]):
+            return self.dir+"/mods/"+self.mod_list[md5]
+        elif os.path.exists(self.dir+"/clientmods/"+self.mod_list[md5]):
+            return self.dir+"/clientmods/"+self.mod_list[md5]
+
+    def comment(self,msg,file=""):
+        if file!="":
+            try:
+                msg=open(os.path.dirname(os.path.abspath(__file__))+"/"+file,"r",encoding="utf-8")
+                self.update_logs=msg.read()
+                print("已提交更新\n"+self.update_logs)
+                msg.close()
+            except:
+                print("读取文件失败")
+        else:
+            self.update_logs=msg
+            print("已提交更新\n"+msg)
+        self.update_time=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+        self.makeModList()
+        saveData()
 
 
+def readData():
+    if os.path.exists(os.path.dirname(os.path.abspath(__file__))+"/"+"data.csv"):
+        with open(os.path.dirname(os.path.abspath(__file__))+"/"+"data.csv","r",encoding="utf-8") as f:
+            d=f.read().split(",")
+            UPDATE.update_time=d[0]
+            UPDATE.update_logs=d[1]
+            UPDATE.mod_list=eval(d[2])
+    else:
+        UPDATE.update_time=""
+        UPDATE.update_logs=""
+        UPDATE.mod_list=dict()
 
-
+def saveData():
+    with open(os.path.dirname(os.path.abspath(__file__))+"/"+"data.csv","w",encoding="utf-8") as f:
+        d=[]
+        d.append(UPDATE.update_time)
+        d.append(UPDATE.update_logs)
+        d.append(str(UPDATE.mod_list))
+        f.write(",".join(d))
 
 #router
 @SERVER.route("/api/getupdate")
@@ -49,9 +87,35 @@ def getUpdate():
 def download(md5):
     return send_file(UPDATE.getModPath(md5), as_attachment=True)
 
+def runAPI(ip="0.0.0.0",port=25564):
+    SERVER.run(ip,port)
+
 
 #main
 UPDATE = Update(SERVER_PATH)
 if __name__ == "__main__":
-    UPDATE.makeModList()
-    SERVER.run("0.0.0.0",25564)
+    readData()
+    api = threading.Thread(target= runAPI, args=("0.0.0.0",25564))
+    api.start()
+    while True:
+        com = input("").split(maxsplit=1)
+        if len(com) < 1:
+            com.append("")
+        if com[0] == "stop":
+            os.kill(os.getpid(),signal.SIGTERM)
+        elif com[0] == "comment":
+            if len(com)==1:
+                print("请提供更新日志")
+            else:
+                if com[1].split()[0]=="-f":
+                    UPDATE.comment("",com[1].split()[1])
+                else:
+                    UPDATE.comment(com[1])
+        elif com[0] == "status":
+            print("当前状态")
+            print(UPDATE.update_time)
+            print(UPDATE.update_logs)
+            print(UPDATE.mod_list)
+        else:
+            print("unknow command")
+            print(com)
