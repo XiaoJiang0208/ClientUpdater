@@ -28,7 +28,8 @@ class Update():
     def makeModList(self):
         for f in os.listdir(self.dir+"/mods"):
             self.mod_list[getFileMD5(self.dir+"/mods/"+f)]=f;
-            print(self.mod_list)
+        for f in os.listdir(self.dir+"/clientmods"):
+            self.mod_list[getFileMD5(self.dir+"/clientmods/"+f)]=f;
 
     def makeJson(self) -> Response:
         return jsonify({"update_time":self.update_time,
@@ -61,7 +62,7 @@ class Update():
 def readData():
     if os.path.exists(os.path.dirname(os.path.abspath(__file__))+"/"+"data.csv"):
         with open(os.path.dirname(os.path.abspath(__file__))+"/"+"data.csv","r",encoding="utf-8") as f:
-            d=f.read().split(",")
+            d=f.read().split(",",2)
             UPDATE.update_time=d[0]
             UPDATE.update_logs=d[1]
             UPDATE.mod_list=eval(d[2])
@@ -115,7 +116,8 @@ if __name__ == "__main__":
             print("当前状态")
             print(UPDATE.update_time)
             print(UPDATE.update_logs)
-            print(UPDATE.mod_list)
+            for i in UPDATE.mod_list.items():
+                print(i)
         else:
             print("unknow command")
             print(com)

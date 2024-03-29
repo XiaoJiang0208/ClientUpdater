@@ -30,6 +30,9 @@ public class UpdateScreen extends Screen {
         super(TITLE);
         this.update = up;
         this.serverURL = url;
+        this.updater.update = this.update;
+        this.updater.server_url = this.serverURL;
+        this.updater.start();
     }
 
     protected void init() {
@@ -40,18 +43,18 @@ public class UpdateScreen extends Screen {
         }).bounds(this.width / 2 - 100, 140, 200, 20).build());
         this.layout.arrangeElements();
         this.layout.visitWidgets(this::addRenderableWidget);
-        bt.visible = false;
-        this.updater.update = this.update;
-        this.updater.server_url = this.serverURL;
-        this.updater.start();
+        bt.visible = updater.isComplete;
     }
 
     public void render(GuiGraphics p_281469_, int p_96053_, int p_96054_, float p_96055_) {
         this.renderBackground(p_281469_);
-        if (updater.isComplete) {
-            bt.visible = true;
-        }
+        bt.visible = updater.isComplete;
         super.render(p_281469_, p_96053_, p_96054_, p_96055_);
+    }
+
+    public void tick() {
+        bt.visible = updater.isComplete;
+        super.tick();
     }
 
     public boolean shouldCloseOnEsc() {

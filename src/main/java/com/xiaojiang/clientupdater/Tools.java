@@ -1,5 +1,6 @@
 package com.xiaojiang.clientupdater;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
@@ -88,6 +89,9 @@ public class Tools {
                 int index = filename.indexOf("filename*=UTF-8''");
                 if (index > -1) {
                     filename = filename.substring(index + "filename*=UTF-8''".length());
+                    filename = URLDecoder.decode(filename, "UTF-8");
+                } else {
+                    filename = StringUtils.strip(filename, "attachment; filename=\"");
                     filename = URLDecoder.decode(filename, "UTF-8");
                 }
             }
