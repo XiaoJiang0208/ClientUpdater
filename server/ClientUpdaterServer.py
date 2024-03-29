@@ -26,6 +26,7 @@ class Update():
         self.mod_list=dict()
 
     def makeModList(self):
+        self.mod_list=dict()
         for f in os.listdir(self.dir+"/mods"):
             self.mod_list[getFileMD5(self.dir+"/mods/"+f)]=f;
         for f in os.listdir(self.dir+"/clientmods"):
