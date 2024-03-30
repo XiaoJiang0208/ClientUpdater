@@ -51,8 +51,8 @@ public class ClientUpdater {
 
     @SubscribeEvent
     public void showUpdateMassage(ScreenEvent.Opening event) {
-        Update update = Update.loadJsonFromURL(Config.serverAddress + "api/getupdate");
         if (needshow) {
+            Update update = Update.loadJsonFromURL(Config.serverAddress + "api/getupdate");
             if (update == null) {
                 update = new Update();
                 update.update_time = "unknow";
