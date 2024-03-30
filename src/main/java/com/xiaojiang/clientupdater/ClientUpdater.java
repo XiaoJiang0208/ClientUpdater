@@ -62,7 +62,30 @@ public class ClientUpdater {
                 LOGGER.warn("Connect Error");
             } else {
                 if (!update.update_time.equals(Config.last_update_time)) {
-                    event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, true));
+                    // 获取更新列表
+                    Map<String, String> mods_list = new HashMap<String, String>();
+                    File mods_dir = new File("./mods");
+                    File mods[] = mods_dir.listFiles();
+                    if (mods != null) {
+                        for (File file : mods) {
+                            if (file.isFile()) {
+                                mods_list.put(Tools.getMD5(file.getPath()), file.getName());
+                            }
+                        }
+                    }
+                    // 判断完整性
+                    boolean needupdate = false;
+                    for (String key : update.mods_list) {
+                        if (mods_list.get(key) == null) {
+                            needupdate = true;
+                        }
+                    }
+                    for (String key : mods_list.keySet()) {
+                        if (update.mods_list.indexOf(key) == -1) {
+                            needupdate = true;
+                        }
+                    } // 完整性决定是否客户端需要更新
+                    event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, needupdate));
                     Config.setLastUpdateTime(update.update_time);
                     LOGGER.info("need update");
                 } else {
