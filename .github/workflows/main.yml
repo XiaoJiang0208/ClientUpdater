@@ -46,7 +46,7 @@ jobs:
         name: mod
         path: ./build/libs
     - name: getfilename
-      run: $(ls ./build/libs) >> filename
+      run: $filename && filename=$(ls ./build/libs) && $filename
     - name: Upload files to release
       uses: svenstaro/upload-release-action@v2
       with:
