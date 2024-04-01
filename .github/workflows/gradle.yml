@@ -36,6 +36,11 @@ jobs:
       run: chmod +x ./gradlew
     - name: Build with Gradle Wrapper
       run: ./gradlew build
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: ./build/libs
 
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
