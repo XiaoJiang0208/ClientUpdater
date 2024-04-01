@@ -18,7 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
+    env:
+      file: test.jar
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -44,15 +45,16 @@ jobs:
         name: mod
         path: ./build/libs
     - name: getfilename
-      run: file=$(ls ./build/libs) && echo $file
+      run: file=$(ls ./build/libs) && echo "::set-env name=file::$file" && echo $file
       env:
         file: ${{ vars.file }}
     - name: Upload files to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./build/libs/${{ vars.file }}
+        file: ./build/libs/cl*
         tag: ${{ github.ref }}
+        file_glob: true
         overwrite: true
     
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
