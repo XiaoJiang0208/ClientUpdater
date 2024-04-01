@@ -77,6 +77,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: cd ./server/webdev && npm ci
     - run: cd ./server/webdev && npm run build
     - name: make zip
       run: cd ./server && zip -r server.zip ./web/* ./ClientUpdaterServer.py
