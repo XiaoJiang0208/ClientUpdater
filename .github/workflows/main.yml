@@ -13,12 +13,10 @@ on:
       - created
 
 jobs:
-  build:
-
+  build_mod:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-
+      contents: write
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -47,8 +45,9 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./build/libs
+        file: build/libs/*
         tag: ${{ github.ref }}
+        file_glob: true
         overwrite: true
     
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
@@ -62,6 +61,45 @@ jobs:
     # - name: Build with Gradle 8.5
     #   run: gradle build
 
+  build_server:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: cd ./server/webdev && npm ci
+    - run: cd ./server/webdev && npm run build
+    - name: make zip
+      run: cd ./server && zip -r server.zip ./web/* ./ClientUpdaterServer.py
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: server
+        path: |
+          ./server/web/
+          ./server/ClientUpdaterServer.py
+    - name: Upload files to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: server/server.zip
+        tag: ${{ github.ref }}
+        file_glob: true
+        overwrite: true
+
+        
   dependency-submission:
 
     runs-on: ubuntu-latest
