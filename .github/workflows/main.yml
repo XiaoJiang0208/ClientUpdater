@@ -44,12 +44,12 @@ jobs:
         name: mod
         path: ./build/libs
     - name: getfilename
-      run: file=$(ls ./build/libs) && ::set-output name=filename::$file && echo $file
+      run: file=$(ls ./build/libs) && echo $file
     - name: Upload files to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./build/libs/${{ steps.build.outputs.filename }}
+        file: ./build/libs/${{ env.file }}
         tag: ${{ github.ref }}
         overwrite: true
     
