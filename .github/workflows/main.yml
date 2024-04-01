@@ -16,8 +16,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      filename: test.jar
     permissions:
       contents: read
 
@@ -46,12 +44,12 @@ jobs:
         name: mod
         path: ./build/libs
     - name: getfilename
-      run: echo $filename && filename=$(ls ./build/libs) && echo $filename
+      run: file=$(ls ./build/libs) && ::set-output name=filename::$file && echo $file
     - name: Upload files to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./build/libs/${{ env.filename }}
+        file: ./build/libs/${{ steps.build.outputs.filename }}
         tag: ${{ github.ref }}
         overwrite: true
     
