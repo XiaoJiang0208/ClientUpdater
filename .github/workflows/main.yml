@@ -13,8 +13,7 @@ on:
       - created
 
 jobs:
-  build:
-
+  build_mod:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -62,6 +61,44 @@ jobs:
     # - name: Build with Gradle 8.5
     #   run: gradle build
 
+  build_server:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: cd ./server/webdev
+    - run: npm ci
+    - run: npm run build
+    - name: make zip
+      run: cd .. && zip -r server.zip ./web/* ./ClientUpdaterServer.py
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: server
+        path: |
+          ./web/
+          ./ClientUpdaterServer.py
+    - name: Upload files to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: server.zip
+        tag: ${{ github.ref }}
+        file_glob: true
+        overwrite: true
+
+        
   dependency-submission:
 
     runs-on: ubuntu-latest
