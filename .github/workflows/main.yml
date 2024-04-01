@@ -45,11 +45,13 @@ jobs:
         path: ./build/libs
     - name: getfilename
       run: file=$(ls ./build/libs) && echo $file
+      env:
+        file: ${{ vars.file }}
     - name: Upload files to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./build/libs/${{ env.file }}
+        file: ./build/libs/${{ vars.file }}
         tag: ${{ github.ref }}
         overwrite: true
     
