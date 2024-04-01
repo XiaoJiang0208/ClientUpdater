@@ -1,6 +1,34 @@
 {
   "version": "0.2.0",
   "configurations": [
+  {
+    "name": "run web dev",
+    "request": "launch",
+    "runtimeArgs": [
+      "run",
+      "dev"
+    ],
+    "cwd": "${workspaceFolder}\\server\\webdev",
+    "runtimeExecutable": "npm",
+    "skipFiles": [
+      "<node_internals>/**"
+    ],
+    "type": "node"
+  },
+  {
+    "name": "run web build",
+    "request": "launch",
+    "runtimeArgs": [
+      "run",
+      "build"
+    ],
+    "cwd": "${workspaceFolder}\\server\\webdev",
+    "runtimeExecutable": "npm",
+    "skipFiles": [
+      "<node_internals>/**"
+    ],
+    "type": "node"
+  },
     {
       "type": "java",
       "name": "runClient",
