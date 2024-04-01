@@ -18,8 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      file: test.jar
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -48,7 +46,7 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./build/libs/cl*
+        file: build/libs/cl*
         tag: ${{ github.ref }}
         file_glob: true
         overwrite: true
