@@ -11,6 +11,8 @@ on:
   release:
     types:
       - created
+env:
+  filename: test
 
 jobs:
   build:
@@ -47,9 +49,10 @@ jobs:
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: ./build/libs
+        file: ./build/libs/*
         tag: ${{ github.ref }}
         overwrite: true
+        file_glob: true
     
     # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
     # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
