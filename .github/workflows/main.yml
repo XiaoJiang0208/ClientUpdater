@@ -77,22 +77,21 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: cd ./server/webdev
-    - run: npm run build
+    - run: cd ./server/webdev && npm run build
     - name: make zip
-      run: cd .. && zip -r server.zip ./web/* ./ClientUpdaterServer.py
+      run: cd ./server && zip -r server.zip ./web/* ./ClientUpdaterServer.py
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: server
         path: |
-          ./web/
-          ./ClientUpdaterServer.py
+          ./server/web/
+          ./server/ClientUpdaterServer.py
     - name: Upload files to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: server.zip
+        file: server/server.zip
         tag: ${{ github.ref }}
         file_glob: true
         overwrite: true
