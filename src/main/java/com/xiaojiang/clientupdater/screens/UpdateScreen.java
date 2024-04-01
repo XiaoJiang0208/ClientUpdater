@@ -11,9 +11,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import com.xiaojiang.clientupdater.Updater;
 
-import org.slf4j.Logger;
+//import org.slf4j.Logger;
 
-import com.mojang.logging.LogUtils;
+//import com.mojang.logging.LogUtils;
 import com.xiaojiang.clientupdater.Update;
 
 @OnlyIn(Dist.CLIENT)
@@ -24,7 +24,7 @@ public class UpdateScreen extends Screen {
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     private static Button bt;
     private Updater updater = new Updater();
-    private static final Logger LOGGER = LogUtils.getLogger();
+    // private static final Logger LOGGER = LogUtils.getLogger();
 
     public UpdateScreen(Update up, String url) {
         super(TITLE);
