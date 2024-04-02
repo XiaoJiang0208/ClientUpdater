@@ -78,7 +78,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
     - run: cd ./server/webdev && npm ci
     - run: cd ./server/webdev && npm run build
     - name: make zip
