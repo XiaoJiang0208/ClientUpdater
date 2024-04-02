@@ -28,6 +28,7 @@ class Update():
         self.dir=path
         self.update_logs="test"
         self.mods_list=dict()
+        self.config_list=dict()
 
     def makeModList(self):
         self.mods_list=dict()
@@ -36,17 +37,26 @@ class Update():
         if os.path.exists(self.dir+"/clientmods"):
             for f in os.listdir(self.dir+"/clientmods"):
                 self.mods_list[getFileMD5(self.dir+"/clientmods/"+f)]=f;
+        if os.path.exists(self.dir+"/clientconfig"):
+            for f in os.listdir(self.dir+"/clientconfig"):
+                self.config_list[getFileMD5(self.dir+"/clientconfig/"+f)]=f;
 
     def makeJson(self) -> Response:
         return jsonify({"update_time":self.update_time,
                         "update_logs":self.update_logs,
-                        "mods_list":list(self.mods_list.keys())})
+                        "mods_list":list(self.mods_list.keys()),
+                        "config_list":list(self.config_list.keys())})
 
     def getModPath(self,md5) -> str:
-        if os.path.exists(self.dir+"/mods/"+self.mods_list[md5]):
-            return self.dir+"/mods/"+self.mods_list[md5]
-        elif os.path.exists(self.dir+"/clientmods/"+self.mods_list[md5]):
-            return self.dir+"/clientmods/"+self.mods_list[md5]
+        if self.mods_list.get(md5,False):
+            if os.path.exists(self.dir+"/mods/"+self.mods_list[md5]):
+                return self.dir+"/mods/"+self.mods_list[md5]
+            elif os.path.exists(self.dir+"/clientmods/"+self.mods_list[md5]):
+                return self.dir+"/clientmods/"+self.mods_list[md5]
+        else:
+            if os.path.exists(self.dir+"/clientconfig/"+self.config_list[md5]):
+                return self.dir+"/clientconfig/"+self.config_list[md5]
+        return None
 
     def comment(self,msg,file=""):
         if file!="":
@@ -73,10 +83,12 @@ def readData():
         UPDATE.update_time=data[0]
         UPDATE.update_logs=data[1]
         UPDATE.mods_list=eval(data[2])
+        UPDATE.config_list=eval(data[3])
     else:
         UPDATE.update_time=""
         UPDATE.update_logs=""
         UPDATE.mods_list=dict()
+        UPDATE.config_list=dict()
     '''if os.path.exists(getFileDir()+"/"+"data.csv"):
         with open(getFileDir()+"/"+"data.csv","r",encoding="utf-8") as f:
             d=f.read().split(",",2)
@@ -89,7 +101,7 @@ def readData():
         UPDATE.mods_list=dict()'''
 
 def saveData():
-    CUR.execute("INSERT INTO update_list VALUES (?,?,?)",(UPDATE.update_time,UPDATE.update_logs,str(UPDATE.mods_list)))
+    CUR.execute("INSERT INTO update_list VALUES (?,?,?,?)",(UPDATE.update_time,UPDATE.update_logs,str(UPDATE.mods_list),str(UPDATE.config_list)))
     CONN.commit()
     '''CUR.execute("SELECT * FROM update_list")
     print(CUR.fetchall())
@@ -107,7 +119,8 @@ def initDatabase():
         CUR.execute("""CREATE TABLE update_list
             (update_time TEXT,
             update_logs TEXT,
-            mods_list TEXT);""")
+            mods_list TEXT,
+            config_list);""")
         CONN.commit()
         print("creat database")
 
@@ -148,6 +161,7 @@ def getRangeUpdate(rg):
     update.update_time=data[0]
     update.update_logs=data[1]
     update.mods_list=eval(data[2])
+    update.config_list=eval(data[3])
     return update.makeJson()
 
 @SERVER.route("/api/download/<md5>")
@@ -188,6 +202,8 @@ if __name__ == "__main__":
             print(UPDATE.update_time)
             print(UPDATE.update_logs)
             for i in UPDATE.mods_list.items():
+                print(i)
+            for i in UPDATE.config_list.items():
                 print(i)
         else:
             print("unknow command")

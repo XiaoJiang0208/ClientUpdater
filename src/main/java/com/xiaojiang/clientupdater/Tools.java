@@ -1,10 +1,9 @@
 package com.xiaojiang.clientupdater;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
+//import org.slf4j.Logger;
 
-import com.mojang.logging.LogUtils;
+//import com.mojang.logging.LogUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class Tools {
 
-    private static final Logger LOGGER = LogUtils.getLogger();
+    // private static final Logger LOGGER = LogUtils.getLogger();
 
     public static String getMD5(String path) {
         StringBuffer sb = new StringBuffer();
@@ -53,7 +52,7 @@ public class Tools {
             try (InputStream inputStream = url.openStream()) {
                 // 获取文件名
                 String fileName = getFileName(urlStr);
-                LOGGER.info(fileName);
+                // LOGGER.info(fileName);
                 // 创建保存目录
                 File saveDir = new File(savePath);
                 if (!saveDir.exists()) {
@@ -86,12 +85,13 @@ public class Tools {
             String filename = "";
             if (conn.getHeaderField("Content-Disposition") != null) {
                 filename = conn.getHeaderField("Content-Disposition");
+                // LOGGER.info(filename);
                 int index = filename.indexOf("filename*=UTF-8''");
                 if (index > -1) {
                     filename = filename.substring(index + "filename*=UTF-8''".length());
                     filename = URLDecoder.decode(filename, "UTF-8");
                 } else {
-                    filename = StringUtils.strip(filename, "attachment; filename=\"");
+                    filename = filename.substring("attachment; filename=".length());
                     filename = URLDecoder.decode(filename, "UTF-8");
                 }
             }

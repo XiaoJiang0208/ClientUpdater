@@ -58,57 +58,89 @@ public class ClientUpdater {
                 update.update_time = "unknow";
                 update.update_logs = "Can't connect whit sync server";
                 update.mods_list = null;
+                update.config_list = null;
                 event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, false));
                 LOGGER.warn("Connect Error");
             } else {
                 if (!update.update_time.equals(Config.last_update_time)) {
-                    // 获取更新列表
-                    Map<String, String> mods_list = new HashMap<String, String>();
-                    File mods_dir = new File("./mods");
-                    File mods[] = mods_dir.listFiles();
-                    if (mods != null) {
-                        for (File file : mods) {
+                    // 获取本地mod列表
+                    Map<String, String> file_list = new HashMap<String, String>();
+                    File file_dir = new File("./mods");
+                    File files[] = file_dir.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
                             if (file.isFile()) {
-                                mods_list.put(Tools.getMD5(file.getPath()), file.getName());
+                                file_list.put(Tools.getMD5(file.getPath()), file.getName());
                             }
                         }
                     }
                     // 判断完整性
                     boolean needupdate = false;
                     for (String key : update.mods_list) {
-                        if (mods_list.get(key) == null) {
+                        if (file_list.get(key) == null) {
                             needupdate = true;
                         }
                     }
-                    for (String key : mods_list.keySet()) {
+                    for (String key : file_list.keySet()) {
                         if (update.mods_list.indexOf(key) == -1) {
                             needupdate = true;
                         }
-                    } // 完整性决定是否客户端需要更新
+                    }
+                    // 获取本地config列表
+                    file_dir = new File("./config");
+                    files = file_dir.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            if (file.isFile()) {
+                                file_list.put(Tools.getMD5(file.getPath()), file.getName());
+                            }
+                        }
+                    }
+                    for (String key : update.config_list) {
+                        if (file_list.get(key) == null) {
+                            needupdate = true;
+                        }
+                    }
+                    // 完整性决定是否客户端需要更新
                     event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, needupdate));
                     Config.setLastUpdateTime(update.update_time);
                     LOGGER.info("need update");
                 } else {
-                    // 获取更新列表
-                    Map<String, String> mods_list = new HashMap<String, String>();
-                    File mods_dir = new File("./mods");
-                    File mods[] = mods_dir.listFiles();
-                    if (mods != null) {
-                        for (File file : mods) {
+                    // 获取本地mod列表
+                    Map<String, String> file_list = new HashMap<String, String>();
+                    File file_dir = new File("./mods");
+                    File files[] = file_dir.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
                             if (file.isFile()) {
-                                mods_list.put(Tools.getMD5(file.getPath()), file.getName());
+                                file_list.put(Tools.getMD5(file.getPath()), file.getName());
                             }
                         }
                     }
                     // 判断完整性
                     boolean needupdate = false;
                     for (String key : update.mods_list) {
-                        if (mods_list.get(key) == null) {
+                        if (file_list.get(key) == null) {
                             needupdate = true;
                         }
                     }
-                    for (String key : mods_list.keySet()) {
+                    for (String key : file_list.keySet()) {
                         if (update.mods_list.indexOf(key) == -1) {
+                            needupdate = true;
+                        }
+                    }
+                    // 获取本地config列表
+                    file_dir = new File("./config");
+                    files = file_dir.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            if (file.isFile()) {
+                                file_list.put(Tools.getMD5(file.getPath()), file.getName());
+                            }
+                        }
+                    }
+                    for (String key : update.config_list) {
+                        if (file_list.get(key) == null) {
                             needupdate = true;
                         }
                     }

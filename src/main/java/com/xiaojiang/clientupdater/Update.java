@@ -16,6 +16,7 @@ public class Update {
     public String update_time;
     public String update_logs;
     public List<String> mods_list;
+    public List<String> config_list;
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static Update loadJsonFromURL(String url) {

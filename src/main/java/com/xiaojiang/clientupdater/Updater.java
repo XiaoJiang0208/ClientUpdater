@@ -14,28 +14,42 @@ public class Updater extends Thread {
     public Update update = new Update();
 
     public void run() {
-        Map<String, String> mods_list = new HashMap<String, String>();
-        File mods_dir = new File("./mods");
-        File mods[] = mods_dir.listFiles();
-        if (mods != null) {
-            for (File file : mods) {
+        Map<String, String> file_list = new HashMap<String, String>();
+        File file_dir = new File("./mods");
+        File files[] = file_dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
                 if (file.isFile()) {
-                    mods_list.put(Tools.getMD5(file.getPath()), file.getName());
+                    file_list.put(Tools.getMD5(file.getPath()), file.getName());
                 }
             }
         }
         for (String key : update.mods_list)
             LOGGER.info(key);
-        for (String key : update.mods_list) {
-            if (mods_list.get(key) == null) {
+        for (String key : update.mods_list) {// 下载mod
+            if (file_list.get(key) == null) {
                 Tools.downloadByUrl(server_url + "api/download/" + key, "./mods");
             }
         }
-        for (String key : mods_list.keySet()) {
+        for (String key : file_list.keySet()) {// 删除mod
             if (update.mods_list.indexOf(key) == -1) {
-                File mod = new File("./mods/" + mods_list.get(key));
+                File mod = new File("./mods/" + file_list.get(key));
                 if (!mod.delete())
                     LOGGER.error("Can't delete the mod!");
+            }
+        }
+        file_dir = new File("./config");
+        files = file_dir.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    file_list.put(Tools.getMD5(file.getPath()), file.getName());
+                }
+            }
+        }
+        for (String key : update.config_list) {// 下载config
+            if (file_list.get(key) == null) {
+                Tools.downloadByUrl(server_url + "api/download/" + key, "./config");
             }
         }
         isComplete = true;
