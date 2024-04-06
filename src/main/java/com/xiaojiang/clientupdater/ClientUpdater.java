@@ -49,6 +49,7 @@ public class ClientUpdater {
         LOGGER.info("Made By XiaoJiang");
     }
 
+    // 客户端
     @SubscribeEvent
     public void showUpdateMassage(ScreenEvent.Opening event) {
         if (needshow) {
