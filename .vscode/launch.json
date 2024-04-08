@@ -93,7 +93,8 @@
       "name": "runUpdaterServer",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}\\server\\ClientUpdaterServer.py"
+      "program": "${workspaceFolder}\\server\\ClientUpdaterServer.py",
+      "cwd": "${workspaceFolder}\\server"
     }
   ]
 }

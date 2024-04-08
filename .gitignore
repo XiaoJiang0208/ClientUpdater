@@ -26,3 +26,5 @@ forge*changelog.txt
 
 # server
 server/web
+server/mods
+server/clientconfig

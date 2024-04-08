@@ -19,12 +19,19 @@ def getFileMD5(path:str) -> str:
         return hashlib.md5(bytes).hexdigest();
 
 def getFileDir():
-    return os.path.dirname(os.path.abspath(__file__)).replace("\\","/")
+    if os.path.isabs(SERVER_PATH):
+        return SERVER_PATH
+    else:
+        return os.path.dirname(os.path.abspath(__file__)).replace("\\","/")+SERVER_PATH
 
 #update
 class Update():
     def __init__(self,path) -> None:
         self.update_time="0"
+        if os.path.isabs(path):
+            self.dir=path
+        else:
+            self.dir=os.path.dirname(os.path.abspath(__file__)).replace("\\","/")+path
         self.dir=path
         self.update_logs="test"
         self.mods_list=dict()
@@ -34,13 +41,23 @@ class Update():
         self.mods_list=dict()
         if os.path.exists(self.dir+"/mods"):
             for f in os.listdir(self.dir+"/mods"):
-                self.mods_list[getFileMD5(self.dir+"/mods/"+f)]=f;
+                self.mods_list[getFileMD5(self.dir+"/mods/"+f)]=f
         if os.path.exists(self.dir+"/clientmods"):
             for f in os.listdir(self.dir+"/clientmods"):
-                self.mods_list[getFileMD5(self.dir+"/clientmods/"+f)]=f;
+                self.mods_list[getFileMD5(self.dir+"/clientmods/"+f)]=f
         if os.path.exists(self.dir+"/clientconfig"):
+            dirs=[]
             for f in os.listdir(self.dir+"/clientconfig"):
-                self.config_list[getFileMD5(self.dir+"/clientconfig/"+f)]=f;
+                if os.path.isdir(self.dir+"/clientconfig/"+f):
+                    dirs.append(f)
+                else:
+                    self.config_list[getFileMD5(self.dir+"/clientconfig/"+f)]=f
+            for d in dirs:
+                for f in os.listdir(self.dir+"/clientconfig/"+d):
+                    if os.path.isfile(self.dir+"/clientconfig/"+d+"/"+f):
+                        self.config_list[getFileMD5(self.dir+"/clientconfig/"+d+"/"+f)]=d+"/"+f
+                    else:
+                        dirs.append(d+"/"+f)
 
     def makeJson(self) -> Response:
         return jsonify({"update_time":self.update_time,
@@ -58,6 +75,11 @@ class Update():
             if os.path.exists(self.dir+"/clientconfig/"+self.config_list[md5]):
                 return self.dir+"/clientconfig/"+self.config_list[md5]
         return None
+    def getModName(self,md5) -> str:
+        if self.mods_list.get(md5,False):
+            return self.mods_list.get(md5)
+        else:
+            return self.config_list.get(md5)
 
     def comment(self,msg,file=""):
         if file!="":
@@ -180,7 +202,10 @@ def getRangeUpdate(rg):
 
 @SERVER.route("/api/download/<md5>")
 def download(md5):
-    return send_file(UPDATE.getModPath(md5), as_attachment=True)
+    resp = send_file(UPDATE.getModPath(md5), as_attachment=True)
+    resp.headers["path"]=UPDATE.getModName(md5)
+    print(UPDATE.getModPath(md5))
+    return resp
 
 @SERVER.route("/")
 def root():
