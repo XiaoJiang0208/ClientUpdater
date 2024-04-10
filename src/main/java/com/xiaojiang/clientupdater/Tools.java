@@ -1,9 +1,8 @@
 package com.xiaojiang.clientupdater;
 
 import org.apache.commons.io.FileUtils;
-//import org.slf4j.Logger;
-
-//import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
+import com.mojang.logging.LogUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +19,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class Tools {
 
-    // private static final Logger LOGGER = LogUtils.getLogger();
+    @SuppressWarnings("unused")
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public static String getMD5(String path) {
         StringBuffer sb = new StringBuffer();
@@ -52,11 +52,10 @@ public class Tools {
             try (InputStream inputStream = url.openStream()) {
                 // 获取文件名
                 String fileName = getFileName(urlStr);
-                // LOGGER.info(fileName);
                 // 创建保存目录
                 File saveDir = new File(savePath);
                 if (!saveDir.exists()) {
-                    saveDir.mkdir();
+                    saveDir.mkdirs();
                 }
 
                 // 创建文件路径
@@ -96,6 +95,29 @@ public class Tools {
                 }
             }
             return filename;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String getFilePath(String href) {
+        try {
+            URL url = new URL(href);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.connect(); // 获取文件名和扩展名
+            conn.getResponseCode();
+            // 获取header 确定文件名和扩展名，并防止乱码
+            String filepath = "";
+            filepath = conn.getHeaderField("Path");
+            if (conn.getHeaderField("Path") != null) {
+                int index = filepath.lastIndexOf("/");
+                if (index > -1) {
+                    // LOGGER.info(filepath.substring(0, index));
+                    return filepath.substring(0, index);
+                }
+            }
+            return "";
         } catch (Exception e) {
             e.printStackTrace();
             return "";

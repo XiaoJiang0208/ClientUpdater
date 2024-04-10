@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import signal
 import sys
 from flask import *
@@ -67,14 +69,15 @@ class Update():
 
     def getModPath(self,md5) -> str:
         if self.mods_list.get(md5,False):
+            print("wow")
             if os.path.exists(self.dir+"/mods/"+self.mods_list[md5]):
+                print("wow")
                 return self.dir+"/mods/"+self.mods_list[md5]
             elif os.path.exists(self.dir+"/clientmods/"+self.mods_list[md5]):
                 return self.dir+"/clientmods/"+self.mods_list[md5]
         else:
             if os.path.exists(self.dir+"/clientconfig/"+self.config_list[md5]):
                 return self.dir+"/clientconfig/"+self.config_list[md5]
-        return None
     def getModName(self,md5) -> str:
         if self.mods_list.get(md5,False):
             return self.mods_list.get(md5)
@@ -202,9 +205,10 @@ def getRangeUpdate(rg):
 
 @SERVER.route("/api/download/<md5>")
 def download(md5):
-    resp = send_file(UPDATE.getModPath(md5), as_attachment=True)
-    resp.headers["path"]=UPDATE.getModName(md5)
     print(UPDATE.getModPath(md5))
+    resp = send_file(UPDATE.getModPath(md5), as_attachment=True)
+    resp.headers["Path"]=UPDATE.getModName(md5)
+    print(UPDATE.getModName(md5))
     return resp
 
 @SERVER.route("/")

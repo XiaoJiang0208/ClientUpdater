@@ -24,10 +24,9 @@ public class Updater extends Thread {
                 }
             }
         }
-        for (String key : update.mods_list)
-            LOGGER.info(key);
         for (String key : update.mods_list) {// 下载mod
             if (file_list.get(key) == null) {
+                LOGGER.info("download: " + key);
                 Tools.downloadByUrl(server_url + "api/download/" + key, "./mods");
             }
         }
@@ -49,7 +48,8 @@ public class Updater extends Thread {
         }
         for (String key : update.config_list) {// 下载config
             if (file_list.get(key) == null) {
-                Tools.downloadByUrl(server_url + "api/download/" + key, "./config");
+                Tools.downloadByUrl(server_url + "api/download/" + key,
+                        "./config/" + Tools.getFilePath(server_url + "api/download/" + key));
             }
         }
         isComplete = true;
