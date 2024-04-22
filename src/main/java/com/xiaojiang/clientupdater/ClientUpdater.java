@@ -161,7 +161,6 @@ public class ClientUpdater {
                     }
                     if (files != null) {
                         while (!files.isEmpty()) {
-                            LOGGER.info(files.peek().getPath());
                             if (files.peek().isFile()) {
                                 file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
                             } else if (files.peek().isDirectory()) {
@@ -173,7 +172,6 @@ public class ClientUpdater {
                     }
                     for (String key : update.config_list) {
                         if (file_list.get(key) == null) {
-                            LOGGER.info(key);
                             needupdate = true;
                         }
                     }
