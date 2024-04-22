@@ -18,7 +18,7 @@ import com.xiaojiang.clientupdater.Update;
 
 @OnlyIn(Dist.CLIENT)
 public class UpdateScreen extends Screen {
-    private static final Component TITLE = Component.translatable("正在更新");
+    private static final Component TITLE = Component.translatable("gui.clientupdater.updating");
     private Update update = new Update();
     private String serverURL;
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);

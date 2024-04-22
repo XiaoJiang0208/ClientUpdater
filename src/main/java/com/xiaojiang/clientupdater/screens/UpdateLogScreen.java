@@ -20,7 +20,7 @@ import com.xiaojiang.clientupdater.Update;
 
 @OnlyIn(Dist.CLIENT)
 public class UpdateLogScreen extends Screen {
-    private static final Component TITLE = Component.translatable("更新日志");
+    private static final Component TITLE = Component.translatable("clientupdater.gui.updatelog");
     private String serverURL;
     private Update update = new Update();
     private boolean need_update;

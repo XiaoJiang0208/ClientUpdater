@@ -8,6 +8,8 @@ import com.xiaojiang.clientupdater.screens.UpdateLogScreen;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
+import java.util.LinkedList;
 
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -67,11 +69,18 @@ public class ClientUpdater {
                     // 获取本地mod列表
                     Map<String, String> file_list = new HashMap<String, String>();
                     File file_dir = new File("./mods");
-                    File files[] = file_dir.listFiles();
+                    Queue<File> files = new LinkedList<File>();
+                    for (File f : file_dir.listFiles()) {
+                        files.offer(f);
+                    }
                     if (files != null) {
-                        for (File file : files) {
-                            if (file.isFile()) {
-                                file_list.put(Tools.getMD5(file.getPath()), file.getName());
+                        while (!files.isEmpty()) {
+                            if (files.peek().isFile()) {
+                                file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
+                            } else if (files.peek().isDirectory()) {
+                                for (File f : files.poll().listFiles()) {
+                                    files.offer(f);
+                                }
                             }
                         }
                     }
@@ -89,11 +98,18 @@ public class ClientUpdater {
                     }
                     // 获取本地config列表
                     file_dir = new File("./config");
-                    files = file_dir.listFiles();
+                    files = new LinkedList<File>();
+                    for (File f : file_dir.listFiles()) {
+                        files.offer(f);
+                    }
                     if (files != null) {
-                        for (File file : files) {
-                            if (file.isFile()) {
-                                file_list.put(Tools.getMD5(file.getPath()), file.getName());
+                        while (!files.isEmpty()) {
+                            if (files.peek().isFile()) {
+                                file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
+                            } else if (files.peek().isDirectory()) {
+                                for (File f : files.poll().listFiles()) {
+                                    files.offer(f);
+                                }
                             }
                         }
                     }
@@ -110,11 +126,18 @@ public class ClientUpdater {
                     // 获取本地mod列表
                     Map<String, String> file_list = new HashMap<String, String>();
                     File file_dir = new File("./mods");
-                    File files[] = file_dir.listFiles();
+                    Queue<File> files = new LinkedList<File>();
+                    for (File f : file_dir.listFiles()) {
+                        files.offer(f);
+                    }
                     if (files != null) {
-                        for (File file : files) {
-                            if (file.isFile()) {
-                                file_list.put(Tools.getMD5(file.getPath()), file.getName());
+                        while (!files.isEmpty()) {
+                            if (files.peek().isFile()) {
+                                file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
+                            } else if (files.peek().isDirectory()) {
+                                for (File f : files.poll().listFiles()) {
+                                    files.offer(f);
+                                }
                             }
                         }
                     }
@@ -132,16 +155,25 @@ public class ClientUpdater {
                     }
                     // 获取本地config列表
                     file_dir = new File("./config");
-                    files = file_dir.listFiles();
+                    files = new LinkedList<File>();
+                    for (File f : file_dir.listFiles()) {
+                        files.offer(f);
+                    }
                     if (files != null) {
-                        for (File file : files) {
-                            if (file.isFile()) {
-                                file_list.put(Tools.getMD5(file.getPath()), file.getName());
+                        while (!files.isEmpty()) {
+                            LOGGER.info(files.peek().getPath());
+                            if (files.peek().isFile()) {
+                                file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
+                            } else if (files.peek().isDirectory()) {
+                                for (File f : files.poll().listFiles()) {
+                                    files.offer(f);
+                                }
                             }
                         }
                     }
                     for (String key : update.config_list) {
                         if (file_list.get(key) == null) {
+                            LOGGER.info(key);
                             needupdate = true;
                         }
                     }
