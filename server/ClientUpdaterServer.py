@@ -207,8 +207,7 @@ def getRangeUpdate(rg):
 def download(md5):
     print(UPDATE.getModPath(md5))
     resp = send_file(UPDATE.getModPath(md5), as_attachment=True)
-    resp.headers["Path"]=UPDATE.getModName(md5)
-    print(UPDATE.getModName(md5))
+    resp.headers["Path"]=UPDATE.getModName(md5).encode("utf-8").decode("latin1")
     return resp
 
 @SERVER.route("/")
