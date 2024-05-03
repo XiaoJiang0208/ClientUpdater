@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.LinkedList;
 
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -58,8 +59,8 @@ public class ClientUpdater {
             Update update = Update.loadJsonFromURL(Config.serverAddress + "api/getupdate");
             if (update == null) {
                 update = new Update();
-                update.update_time = "unknow";
-                update.update_logs = "Can't connect whit sync server";
+                update.update_time = I18n.get("gui.clientupdater.error");
+                update.update_logs = I18n.get("gui.clientupdater.unknowhost");
                 update.mods_list = null;
                 update.config_list = null;
                 event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, false));

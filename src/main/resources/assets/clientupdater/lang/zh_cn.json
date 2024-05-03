@@ -4,5 +4,7 @@
     "gui.clientupdater.gotoweb": "前往官网",
     "gui.clientupdater.update": "立即更新",
     "gui.clientupdater.complete": "完成!",
-    "gui.clientupdater.restart": "立即重启!"
+    "gui.clientupdater.restart": "立即重启!",
+    "gui.clientupdater.error": "错误!",
+    "gui.clientupdater.unknowhost": "无法连接至更新服务器!"
 }
