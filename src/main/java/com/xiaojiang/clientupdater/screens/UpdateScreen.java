@@ -38,7 +38,7 @@ public class UpdateScreen extends Screen {
     protected void init() {
         this.layout.addToHeader(new StringWidget(this.getTitle(), this.font));
         // 添加按钮
-        bt = this.layout.addToFooter(Button.builder(Component.translatable("Restart Now!"), (v) -> {
+        bt = this.layout.addToFooter(Button.builder(Component.translatable("gui.clientupdater.restart"), (v) -> {
             this.minecraft.stop();
         }).bounds(this.width / 2 - 100, 140, 200, 20).build());
         this.layout.arrangeElements();

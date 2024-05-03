@@ -20,7 +20,7 @@ import com.xiaojiang.clientupdater.Update;
 
 @OnlyIn(Dist.CLIENT)
 public class UpdateLogScreen extends Screen {
-    private static final Component TITLE = Component.translatable("clientupdater.gui.updatelog");
+    private static final Component TITLE = Component.translatable("gui.clientupdater.updatelog");
     private String serverURL;
     private Update update = new Update();
     private boolean need_update;
@@ -49,7 +49,7 @@ public class UpdateLogScreen extends Screen {
                 .addChild(new MultiLineEditBox(this.font, this.width / 2, this.width, this.height, 100,
                         Component.translatable(""), Component.translatable("")));// 添加多行文本框用于显示更新日志
         uplogs.setValue(this.update.update_time + "\n" + this.update.update_logs);// 设置更新日志
-        logs$rowhelper.addChild(Button.builder(Component.translatable("前往官网"), (p_280784_) -> {
+        logs$rowhelper.addChild(Button.builder(Component.translatable("gui.clientupdater.gotoweb"), (p_280784_) -> {
             this.minecraft.setScreen(new ConfirmLinkScreen((p_280783_) -> {
                 if (p_280783_) {
                     Util.getPlatform().openUri(serverURL);
@@ -59,13 +59,14 @@ public class UpdateLogScreen extends Screen {
             }, serverURL, true));
         }).bounds(this.width / 2 - 155, this.height - 27, 150, 20).build());// 添加官网跳转按钮
         if (need_update) {
-            this.layout.addToFooter(Button.builder(Component.translatable("Update!"), (p_280801_) -> {
+            this.layout.addToFooter(Button.builder(Component.translatable("gui.clientupdater.update"), (p_280801_) -> {
                 this.minecraft.setScreen(new UpdateScreen(this.update, this.serverURL));
             }).bounds(this.width / 2 - 100, 140, 200, 20).build());
         } else {
-            this.layout.addToFooter(Button.builder(Component.translatable("Complete!"), (p_280801_) -> {
-                this.minecraft.setScreen((Screen) null);
-            }).bounds(this.width / 2 - 100, 140, 200, 20).build());
+            this.layout
+                    .addToFooter(Button.builder(Component.translatable("gui.clientupdater.complete"), (p_280801_) -> {
+                        this.minecraft.setScreen((Screen) null);
+                    }).bounds(this.width / 2 - 100, 140, 200, 20).build());
         }
         this.layout.arrangeElements();
         this.layout.visitWidgets(this::addRenderableWidget);
