@@ -55,6 +55,7 @@ public class ClientUpdater {
     // 客户端
     @SubscribeEvent
     public void showUpdateMassage(ScreenEvent.Opening event) {
+        // 更新逻辑
         if (needshow) {
             Update update = Update.loadJsonFromURL(Config.serverAddress + "api/getupdate");
             if (update == null) {
@@ -66,122 +67,65 @@ public class ClientUpdater {
                 event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, false));
                 LOGGER.warn("Connect Error");
             } else {
-                if (!update.update_time.equals(Config.last_update_time)) {
-                    // 获取本地mod列表
-                    Map<String, String> file_list = new HashMap<String, String>();
-                    File file_dir = new File("./mods");
-                    Queue<File> files = new LinkedList<File>();
-                    for (File f : file_dir.listFiles()) {
-                        files.offer(f);
-                    }
-                    if (files != null) {
-                        while (!files.isEmpty()) {
-                            if (files.peek().isFile()) {
-                                file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
-                            } else if (files.peek().isDirectory()) {
-                                for (File f : files.poll().listFiles()) {
-                                    files.offer(f);
-                                }
+                // 获取本地mod列表
+                Map<String, String> file_list = new HashMap<String, String>();
+                File file_dir = new File("./mods");
+                Queue<File> files = new LinkedList<File>();
+                for (File f : file_dir.listFiles()) {
+                    files.offer(f);
+                }
+                if (files != null) {
+                    while (!files.isEmpty()) {
+                        if (files.peek().isFile()) {
+                            file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
+                        } else if (files.peek().isDirectory()) {
+                            for (File f : files.poll().listFiles()) {
+                                files.offer(f);
                             }
                         }
                     }
-                    // 判断完整性
-                    boolean needupdate = false;
-                    for (String key : update.mods_list) {
-                        if (file_list.get(key) == null) {
-                            needupdate = true;
-                        }
+                }
+                // 判断完整性
+                boolean needupdate = false;
+                for (String key : update.mods_list) {
+                    if (file_list.get(key) == null) {
+                        needupdate = true;
                     }
-                    for (String key : file_list.keySet()) {
-                        if (update.mods_list.indexOf(key) == -1) {
-                            needupdate = true;
-                        }
+                }
+                for (String key : file_list.keySet()) {
+                    if (update.mods_list.indexOf(key) == -1) {
+                        needupdate = true;
                     }
-                    // 获取本地config列表
-                    file_dir = new File("./config");
-                    files = new LinkedList<File>();
-                    for (File f : file_dir.listFiles()) {
-                        files.offer(f);
-                    }
-                    if (files != null) {
-                        while (!files.isEmpty()) {
-                            if (files.peek().isFile()) {
-                                file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
-                            } else if (files.peek().isDirectory()) {
-                                for (File f : files.poll().listFiles()) {
-                                    files.offer(f);
-                                }
+                }
+                // 获取本地config列表
+                file_dir = new File("./config");
+                files = new LinkedList<File>();
+                for (File f : file_dir.listFiles()) {
+                    files.offer(f);
+                }
+                if (files != null) {
+                    while (!files.isEmpty()) {
+                        if (files.peek().isFile()) {
+                            file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
+                        } else if (files.peek().isDirectory()) {
+                            for (File f : files.poll().listFiles()) {
+                                files.offer(f);
                             }
                         }
                     }
-                    for (String key : update.config_list) {
-                        if (file_list.get(key) == null) {
-                            needupdate = true;
-                        }
+                }
+                // 对比config列表
+                for (String key : update.config_list) {
+                    if (file_list.get(key) == null) {
+                        needupdate = true;
                     }
-                    // 完整性决定是否客户端需要更新
+                }
+                // 更新判断
+                if (needupdate) {
+                    event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, needupdate));
+                } else if (!update.update_time.equals(Config.last_update_time)) {
                     event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, needupdate));
                     Config.setLastUpdateTime(update.update_time);
-                    LOGGER.info("need update");
-                } else {
-                    // 获取本地mod列表
-                    Map<String, String> file_list = new HashMap<String, String>();
-                    File file_dir = new File("./mods");
-                    Queue<File> files = new LinkedList<File>();
-                    for (File f : file_dir.listFiles()) {
-                        files.offer(f);
-                    }
-                    if (files != null) {
-                        while (!files.isEmpty()) {
-                            if (files.peek().isFile()) {
-                                file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
-                            } else if (files.peek().isDirectory()) {
-                                for (File f : files.poll().listFiles()) {
-                                    files.offer(f);
-                                }
-                            }
-                        }
-                    }
-                    // 判断完整性
-                    boolean needupdate = false;
-                    for (String key : update.mods_list) {
-                        if (file_list.get(key) == null) {
-                            needupdate = true;
-                        }
-                    }
-                    for (String key : file_list.keySet()) {
-                        if (update.mods_list.indexOf(key) == -1) {
-                            needupdate = true;
-                        }
-                    }
-                    // 获取本地config列表
-                    file_dir = new File("./config");
-                    files = new LinkedList<File>();
-                    for (File f : file_dir.listFiles()) {
-                        files.offer(f);
-                    }
-                    if (files != null) {
-                        while (!files.isEmpty()) {
-                            if (files.peek().isFile()) {
-                                file_list.put(Tools.getMD5(files.peek().getPath()), files.poll().getName());
-                            } else if (files.peek().isDirectory()) {
-                                for (File f : files.poll().listFiles()) {
-                                    files.offer(f);
-                                }
-                            }
-                        }
-                    }
-                    for (String key : update.config_list) {
-                        if (file_list.get(key) == null) {
-                            needupdate = true;
-                        }
-                    }
-                    if (needupdate) {
-                        event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, true));
-                        LOGGER.info("check");
-                    } else {
-                        LOGGER.info("Don't need update");
-                    }
                 }
             }
             needshow = false;
