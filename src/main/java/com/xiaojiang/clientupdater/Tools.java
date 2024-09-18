@@ -82,17 +82,17 @@ public class Tools {
             href = conn.getURL().toString();
             // 获取header 确定文件名和扩展名，并防止乱码
             String filename = "";
-            if (conn.getHeaderField("Content-Disposition") != null) {
-                filename = conn.getHeaderField("Content-Disposition");
+            if (conn.getHeaderField("Path") != null) {
+                filename = conn.getHeaderField("Path");
                 // LOGGER.info(filename);
-                int index = filename.indexOf("filename*=UTF-8''");
-                if (index > -1) {
-                    filename = filename.substring(index + "filename*=UTF-8''".length());
-                    filename = URLDecoder.decode(filename, "UTF-8");
-                } else {
-                    filename = filename.substring("attachment; filename=".length());
-                    filename = URLDecoder.decode(filename, "UTF-8");
-                }
+                // int index = filename.indexOf("filename*=UTF-8''");
+                // if (index > -1) {
+                // filename = filename.substring(index + "filename*=UTF-8''".length());
+                // filename = URLDecoder.decode(filename, "UTF-8");
+                // } else {
+                // filename = filename.substring("attachment; filename=".length());
+                // filename = URLDecoder.decode(filename, "UTF-8");
+                // }
             }
             return filename;
         } catch (Exception e) {
