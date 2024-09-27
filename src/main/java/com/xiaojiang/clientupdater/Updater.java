@@ -24,17 +24,17 @@ public class Updater extends Thread {
                 }
             }
         }
-        for (String key : update.mods_list) {// 下载mod
-            if (file_list.get(key) == null) {
-                LOGGER.info("download: " + key);
-                Tools.downloadByUrl(server_url + "api/download/" + key, "./mods");
-            }
-        }
         for (String key : file_list.keySet()) {// 删除mod
             if (update.mods_list.indexOf(key) == -1) {
                 File mod = new File("./mods/" + file_list.get(key));
                 if (!mod.delete())
                     LOGGER.error("Can't delete the mod!");
+            }
+        }
+        for (String key : update.mods_list) {// 下载mod
+            if (file_list.get(key) == null) {
+                LOGGER.info("download: " + key);
+                Tools.downloadByUrl(server_url + "api/download/" + key, "./mods");
             }
         }
         file_dir = new File("./config");
@@ -49,7 +49,7 @@ public class Updater extends Thread {
         for (String key : update.config_list) {// 下载config
             if (file_list.get(key) == null) {
                 Tools.downloadByUrl(server_url + "api/download/" + key,
-                        "./config/" + Tools.getFilePath(server_url + "api/download/" + key));
+                        "./config");
             }
         }
         isComplete = true;

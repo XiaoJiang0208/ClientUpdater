@@ -52,14 +52,21 @@ public class Tools {
             try (InputStream inputStream = url.openStream()) {
                 // 获取文件名
                 String fileName = getFileName(urlStr);
+                String path = "";
                 // 创建保存目录
-                File saveDir = new File(savePath);
+                int index = fileName.lastIndexOf("/");
+                if (index > -1) {
+                    // LOGGER.info(filepath.substring(0, index));
+                    path = savePath + '/' + fileName.substring(0, index);
+                    fileName = fileName.substring(index + 1, fileName.length());
+                }
+                File saveDir = new File(path);
                 if (!saveDir.exists()) {
                     saveDir.mkdirs();
                 }
 
                 // 创建文件路径
-                Path filePath = Path.of(savePath, fileName);
+                Path filePath = Path.of(path, fileName);
 
                 // 下载文件
                 Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
@@ -101,26 +108,26 @@ public class Tools {
         }
     }
 
-    public static String getFilePath(String href) {
-        try {
-            URL url = new URL(href);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.connect(); // 获取文件名和扩展名
-            conn.getResponseCode();
-            // 获取header 确定文件名和扩展名，并防止乱码
-            String filepath = "";
-            filepath = conn.getHeaderField("Path");
-            if (conn.getHeaderField("Path") != null) {
-                int index = filepath.lastIndexOf("/");
-                if (index > -1) {
-                    // LOGGER.info(filepath.substring(0, index));
-                    return filepath.substring(0, index);
-                }
-            }
-            return "";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
+    // public static String getFilePath(String href) {
+    // try {
+    // URL url = new URL(href);
+    // HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    // conn.connect(); // 获取文件名和扩展名
+    // conn.getResponseCode();
+    // // 获取header 确定文件名和扩展名，并防止乱码
+    // String filepath = "";
+    // filepath = conn.getHeaderField("Path");
+    // if (conn.getHeaderField("Path") != null) {
+    // int index = filepath.lastIndexOf("/");
+    // if (index > -1) {
+    // // LOGGER.info(filepath.substring(0, index));
+    // return filepath.substring(0, index);
+    // }
+    // }
+    // return "";
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // return "";
+    // }
+    // }
 }

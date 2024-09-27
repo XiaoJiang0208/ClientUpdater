@@ -13,7 +13,8 @@ import sqlite3
 
 
 SERVER_PATH = "."
-
+IP = "0.0.0.0"
+PORT = 25564
 
 def getFileMD5(path:str) -> str:
     with open(path,"rb") as f:
@@ -69,9 +70,7 @@ class Update():
 
     def getModPath(self,md5) -> str:
         if self.mods_list.get(md5,False):
-            print("wow")
             if os.path.exists(self.dir+"/mods/"+self.mods_list[md5]):
-                print("wow")
                 return self.dir+"/mods/"+self.mods_list[md5]
             elif os.path.exists(self.dir+"/clientmods/"+self.mods_list[md5]):
                 return self.dir+"/clientmods/"+self.mods_list[md5]
@@ -84,7 +83,7 @@ class Update():
         else:
             return self.config_list.get(md5)
 
-    def comment(self,msg,file=""):
+    def commit(self,msg,file=""):
         if file!="":
             try:
                 msg=open(SERVER_PATH+"/"+file,"r",encoding="utf-8")
@@ -214,7 +213,7 @@ def download(md5):
 def root():
     return render_template("index.html")
 
-def runAPI(ip="0.0.0.0",port=25564):
+def runAPI(ip=IP,port=PORT):
     SERVER.run(ip,port)
 
 
@@ -223,7 +222,7 @@ UPDATE = Update(SERVER_PATH)
 if __name__ == "__main__":
     initDatabase()
     readData()
-    api = threading.Thread(target= runAPI, args=("0.0.0.0",25564))
+    api = threading.Thread(target= runAPI, args=(IP,PORT))
     api.start()
     while True:
         com = input("").split(maxsplit=1)
@@ -231,14 +230,14 @@ if __name__ == "__main__":
             com.append("")
         if com[0] == "stop":
             os.kill(os.getpid(),signal.SIGTERM)
-        elif com[0] == "comment":
+        elif com[0] == "commit":
             if len(com)==1:
                 print("请提供更新日志")
             else:
                 if com[1].split()[0]=="-f":
-                    UPDATE.comment("",com[1].split()[1])
+                    UPDATE.commit("",com[1].split()[1])
                 else:
-                    UPDATE.comment(com[1])
+                    UPDATE.commit(com[1])
         elif com[0] == "status":
             print("当前状态")
             print(UPDATE.update_time)
