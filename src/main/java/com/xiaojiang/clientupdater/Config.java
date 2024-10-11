@@ -12,10 +12,10 @@ public class Config {
 
     private static final ForgeConfigSpec.ConfigValue<String> SERVER_ADD = BUILDER
             .comment("同步服务器url")
-            .define("server_address", "http://exp.example.com:80/");
+            .define("server_address", "http://example.com:25564/");
 
     private static final ForgeConfigSpec.ConfigValue<String> LAST_UPDATE_TIME = BUILDER
-            .comment("最后更新时间(请勿更改)")
+            .comment("最后更新时间(自动生成请勿更改)")
             .define("last_update_time", "0");
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
