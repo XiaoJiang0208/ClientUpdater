@@ -1,0 +1,10 @@
+{
+    "gui.clientupdater.updating": "Updating!",
+    "gui.clientupdater.updatelog": "Update Log",
+    "gui.clientupdater.gotoweb": "Go to Webside",
+    "gui.clientupdater.update": "Update Now!",
+    "gui.clientupdater.complete": "Complete!",
+    "gui.clientupdater.restart": "Restart Now!",
+    "gui.clientupdater.error": "ERROR!",
+    "gui.clientupdater.unknowhost": "Unable to connect to update server!"
+}
