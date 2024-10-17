@@ -59,6 +59,8 @@ public class Tools {
                     // LOGGER.info(filepath.substring(0, index));
                     path = savePath + '/' + fileName.substring(0, index);
                     fileName = fileName.substring(index + 1, fileName.length());
+                }else {
+                    path = savePath;
                 }
                 File saveDir = new File(path);
                 if (!saveDir.exists()) {
