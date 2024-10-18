@@ -218,6 +218,8 @@ def runAPI(ip=IP,port=PORT):
 
 
 #main
+if SERVER_PATH[-1]=="/":
+    SERVER_PATH = SERVER_PATH[:-1]
 UPDATE = Update(SERVER_PATH)
 if __name__ == "__main__":
     initDatabase()

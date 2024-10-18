@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,7 +60,7 @@ public class Tools {
                     // LOGGER.info(filepath.substring(0, index));
                     path = savePath + '/' + fileName.substring(0, index);
                     fileName = fileName.substring(index + 1, fileName.length());
-                }else {
+                } else {
                     path = savePath;
                 }
                 File saveDir = new File(path);
@@ -93,6 +94,7 @@ public class Tools {
             String filename = "";
             if (conn.getHeaderField("Path") != null) {
                 filename = conn.getHeaderField("Path");
+                filename = URLDecoder.decode(URLEncoder.encode(filename, "latin1"), "utf-8");
                 // LOGGER.info(filename);
                 // int index = filename.indexOf("filename*=UTF-8''");
                 // if (index > -1) {
