@@ -11,7 +11,7 @@ defineProps({
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
     <h3>
-      更新日志
+      Update Log
     </h3>
   </div>
 </template>

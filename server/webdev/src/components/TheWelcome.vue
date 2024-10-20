@@ -35,7 +35,7 @@ onBeforeMount(() => {
     <template #heading>{{item.update_time}}</template>
     {{item.update_logs}}
   </WelcomeItem>
-  <a @click="loadFiveUpdate">查看更多。。。</a>
+  <a @click="loadFiveUpdate">See more...</a>
 
   <!--
   <WelcomeItem>
