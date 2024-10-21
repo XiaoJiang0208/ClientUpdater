@@ -11,8 +11,8 @@
 ## Demo
 Senseless updates close to the original
 Automatically displays the update when it's available at startup.
-![updater](https://cdn.modrinth.com/data/cached_images/2af89e9c518d3ad9341fad38e8b287c660058597.png)
-![updater](https://cdn.modrinth.com/data/cached_images/8a38c3b20d2f916dd37e07b546f7b0a78fa367f8.png)
+![up](https://cdn.modrinth.com/data/cached_images/7493ec6b9e9c4bd215a1a3c1e7ebf348d6601d09.png)
+![up](https://cdn.modrinth.com/data/cached_images/e4c17b978a533f9620734a701ea50d666b44c647.png)
 Webpage to view history of update logs
 ![updater](https://cdn.modrinth.com/data/cached_images/0719af247d6ab6ca030c1508c54ffa800f717ca2.png)
 
@@ -34,8 +34,9 @@ last_update_time = “”
 `The server side of this mod is written in python, so there is no need to put clientupdater-x.x.x.jar into the server side mod folder`.
 1. Install the python runtime environment, and install the `flask` and `toml` libraries.
 2. Unzip the server `server.zip` into the server root directory
-3. create the folders `clientmods` and `clientconfig` in the server root directory
-4. Put the `Clientupdater-x.x.x.jar` mod into clientmods
+3. Open port 25564, or modify the PORT in `ClientUpdaterServer.py`
+4. create the folders `clientmods` and `clientconfig` in the server root directory
+5. Put the `Clientupdater-x.x.x.jar` mod into clientmods
     ```
     Game change directory
     |-mods(use mirror mode)
@@ -46,10 +47,10 @@ last_update_time = “”
     |
     |
     ```
-5. Run the script `ClientUpdaterServer.py`.~~~~
-6. Type `commit single line update description` or use `commit -f text file with update information.txt` to submit the update, after submitting the change line the client will receive the update push when restarting.
-7. Use the above command to update the mod list after each mod change.
-8. Use `status` to view the list of mods that have been submitted.
+6. Run the script `ClientUpdaterServer.py`.~~~~
+7. Type `commit single line update description` or use `commit -f text file with update information.txt` to submit the update, after submitting the change line the client will receive the update push when restarting.
+8. Use the above command to update the mod list after each mod change.
+9. Use `status` to view the list of mods that have been submitted.
 
 ### Server-side commands
 | Commands | Usage |
@@ -92,8 +93,9 @@ last_update_time = ""
 `此mod的服务端使用python编写，因此不需要将clientupdater-x.x.x.jar放进服务端的mod文件夹`
 1. 安装python运行环境，并安装`flask`和`toml`库
 2. 解压服务端`server.zip`到服务端根目录
-3. 在服务器根目录下创建文件夹`clientmods`和`clientconfig`
-4. 将`Clientupdater-x.x.x.jar`mod放入clientmods
+3. 开放25564端口，或者修改`ClientUpdaterServer.py`中的PORT
+4. 在服务器根目录下创建文件夹`clientmods`和`clientconfig`
+5. 将`Clientupdater-x.x.x.jar`mod放入clientmods
     ```
     游戏更目录
     |-mods(使用镜像模式)
@@ -103,10 +105,10 @@ last_update_time = ""
     |-clientconfig(客户端配置文件，文件结构同客户端，使用覆盖模式)
     |
     ```
-5. 运行脚本`ClientUpdaterServer.py`
-6. 输入`commit 单行更新说明`或者使用`commit -f 写有更新信息的文本文件.txt`来提交更新，提交完更行后客户端重启时就会收到更新推送
-7. 每次改变mod后用上方命令即可更新mod列表
-8. 使用`status`可以查看已提交的mod列表
+6. 运行脚本`ClientUpdaterServer.py`
+7. 输入`commit 单行更新说明`或者使用`commit -f 写有更新信息的文本文件.txt`来提交更新，提交完更行后客户端重启时就会收到更新推送
+8. 每次改变mod后用上方命令即可更新mod列表
+9. 使用`status`可以查看已提交的mod列表
 
 ### 服务端指令
 | 指令 | 用法 |
