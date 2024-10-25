@@ -32,7 +32,11 @@ last_update_time = “”
 
 ### Server
 `The server side of this mod is written in python, so there is no need to put clientupdater-x.x.x.jar into the server side mod folder`.
-1. Install the python runtime environment, and install the `flask` and `toml` libraries.
+1. Install the python runtime environment, and install the `Flask` and `Flask_Cors` libraries.
+```
+    pip install Flask
+    pip install Flask_Cors
+```
 2. Unzip the server `server.zip` into the server root directory
 3. Open port 25564, or modify the PORT in `ClientUpdaterServer.py`
 4. create the folders `clientmods` and `clientconfig` in the server root directory
@@ -50,7 +54,7 @@ last_update_time = “”
 6. Run the script `ClientUpdaterServer.py`.~~~~
 7. Type `commit single line update description` or use `commit -f text file with update information.txt` to submit the update, after submitting the change line the client will receive the update push when restarting.
 8. Use the above command to update the mod list after each mod change.
-9. Use `status` to view the list of mods that have been submitted.
+9.  Use `status` to view the list of mods that have been submitted.
 
 ### Server-side commands
 | Commands | Usage |
@@ -91,7 +95,11 @@ last_update_time = ""
 
 ### 服务端
 `此mod的服务端使用python编写，因此不需要将clientupdater-x.x.x.jar放进服务端的mod文件夹`
-1. 安装python运行环境，并安装`flask`和`toml`库
+1. 安装python运行环境，并安装`Flask`和`Flask_Cors`库
+```
+    pip install Flask
+    pip install Flask_Cors
+```
 2. 解压服务端`server.zip`到服务端根目录
 3. 开放25564端口，或者修改`ClientUpdaterServer.py`中的PORT
 4. 在服务器根目录下创建文件夹`clientmods`和`clientconfig`

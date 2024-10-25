@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import signal
-import sys
 from flask import *
 from flask_cors import CORS
 import time
 import os
-import toml
 import hashlib
 import threading
 import sqlite3
