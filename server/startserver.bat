@@ -1,0 +1,3 @@
+python ./ClientUpdaterServer.py
+
+pause

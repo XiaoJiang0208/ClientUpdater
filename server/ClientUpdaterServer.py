@@ -203,7 +203,7 @@ def getRangeUpdate(rg):
 @SERVER.route("/api/download/<md5>")
 def download(md5):
     print(UPDATE.getModPath(md5))
-    resp = send_file(UPDATE.getModPath(md5), as_attachment=True)
+    resp = send_file(UPDATE.getModPath(md5), download_name="error.txt", as_attachment=True)
     resp.headers["Path"]=UPDATE.getModName(md5).encode("utf-8").decode("latin1")
     return resp
 
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     api = threading.Thread(target= runAPI, args=(IP,PORT))
     api.start()
     while True:
-        com = input("").split(maxsplit=1)
+        com = input(">>>").split(maxsplit=1)
         if len(com) < 1:
             com.append("")
         if com[0] == "stop":
@@ -249,3 +249,4 @@ if __name__ == "__main__":
         else:
             print("unknow command")
             print(com)
+    input()
