@@ -17,7 +17,7 @@ PORT = 25564
 def getFileMD5(path:str) -> str:
     with open(path,"rb") as f:
         bytes = f.read() # read file as bytes
-        return hashlib.md5(bytes).hexdigest();
+        return hashlib.md5(bytes).hexdigest()
 
 def getFileDir():
     if os.path.isabs(SERVER_PATH):
@@ -40,6 +40,7 @@ class Update():
 
     def makeModList(self):
         self.mods_list=dict()
+        self.config_list=dict()
         if os.path.exists(self.dir+"/mods"):
             for f in os.listdir(self.dir+"/mods"):
                 self.mods_list[getFileMD5(self.dir+"/mods/"+f)]=f

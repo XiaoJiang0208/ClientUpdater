@@ -123,6 +123,7 @@ public class ClientUpdater {
                 // 更新判断
                 if (needupdate) {
                     event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, needupdate));
+                    Config.setLastUpdateTime(update.update_time);
                 } else if (!update.update_time.equals(Config.last_update_time)) {
                     event.setNewScreen(new UpdateLogScreen(Config.serverAddress, update, needupdate));
                     Config.setLastUpdateTime(update.update_time);
